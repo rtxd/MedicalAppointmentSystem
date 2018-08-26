@@ -1,0 +1,78 @@
+﻿@model UTSMedicalSystem.FrontEnd.Models.User
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>User</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Username)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Username)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Password)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Password)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DOB)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DOB)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.UTSID)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.UTSID)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.History)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.History)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsPatient)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsPatient)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsDoctor)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsDoctor)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.IsReceptionist)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.IsReceptionist)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
