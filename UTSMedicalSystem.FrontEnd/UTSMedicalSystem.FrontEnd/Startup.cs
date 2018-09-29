@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using UTSMedicalSystem.FrontEnd.Data;
 using UTSMedicalSystem.FrontEnd.Models;
 using UTSMedicalSystem.FrontEnd.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace UTSMedicalSystem.FrontEnd
 {
@@ -29,7 +30,13 @@ namespace UTSMedicalSystem.FrontEnd
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireDigit = false;
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
@@ -40,6 +47,14 @@ namespace UTSMedicalSystem.FrontEnd
         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddMvc();
+
+            
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/account/login";
+                    options.AccessDeniedPath = "/account/accessdenied";
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
