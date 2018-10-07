@@ -17,7 +17,6 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
     public class PatientsController : Controller
     {
         private readonly MedicalSystemContext _context;
-        private UserManager<ApplicationUser> userManager;
 
         public PatientsController(MedicalSystemContext context)
         {
@@ -28,34 +27,9 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         [Authorize]//(Roles = "Patient")]
         public async Task<IActionResult> Index()
         {
-            //var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            //var users = await userManager.GetUserAsync(HttpContext.User);
-            //var id = users.Id;
-
-            //Original index view
-
             var medicalSystemContext = _context.Users.Include(a => a.Appointments);
-            ViewBag.thisUsersID = Common.GetUserId(this.User);
+            ViewBag.thisUsersID = Common.GetUserId(User);
             return View(await medicalSystemContext.ToListAsync());
-
-            
-
-            //return View(await _context.Users.ToListAsync());
-            //if (id == null)
-            //{
-            //    return NotFound();
-            //}
-
-            
-
-            //var user = await _context.Users
-            //    .SingleOrDefaultAsync(m => m.AspNetUserId == id);
-            //if (user == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //return View(user);
         }
 
         // GET: Patients/Details/5
@@ -87,7 +61,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,FirstName,LastName,Username,Password,DOB,UTSID,History,IsPatient,IsDoctor,IsReceptionist")] User user)
+        public async Task<IActionResult> Create([Bind("ID,AspNetUserId,FirstName,LastName,Username,Password,DOB,UTSID,History,IsPatient,IsDoctor,IsReceptionist")] User user)
         {
             if (ModelState.IsValid)
             {

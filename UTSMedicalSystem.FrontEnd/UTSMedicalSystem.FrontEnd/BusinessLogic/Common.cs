@@ -17,5 +17,15 @@ namespace UTSMedicalSystem.FrontEnd.BusinessLogic
 
             return currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
+
+        public static string GetUserRole(this ClaimsPrincipal user)
+        {
+            if (!user.Identity.IsAuthenticated)
+                return null;
+
+            ClaimsPrincipal currentUser = user;
+
+            return currentUser.FindFirst(ClaimTypes.Role).Value;
+        }
     }
 }
