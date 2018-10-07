@@ -14,6 +14,10 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ID" />
             <div class="form-group">
+                <input type="hidden" asp-for="AspNetUserId" class="form-control" />
+                <span asp-validation-for="AspNetUserId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
                 <input asp-for="FirstName" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
@@ -48,27 +52,9 @@
                 <input asp-for="History" class="form-control" />
                 <span asp-validation-for="History" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="IsPatient" /> @Html.DisplayNameFor(model => model.IsPatient)
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="IsDoctor" /> @Html.DisplayNameFor(model => model.IsDoctor)
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="IsReceptionist" /> @Html.DisplayNameFor(model => model.IsReceptionist)
-                    </label>
-                </div>
-            </div>
+                        <input type="hidden" asp-for="IsPatient" /> @*Html.DisplayNameFor(model => model.IsPatient)*@
+                        <input type="hidden" asp-for="IsDoctor" /> @*@Html.DisplayNameFor(model => model.IsDoctor)*@
+                        <input type="hidden" asp-for="IsReceptionist" /> @*@Html.DisplayNameFor(model => model.IsReceptionist)*@
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>

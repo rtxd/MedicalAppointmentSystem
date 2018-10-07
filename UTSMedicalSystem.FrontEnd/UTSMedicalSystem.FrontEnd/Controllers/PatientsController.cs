@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using UTSMedicalSystem.FrontEnd.Data;
 using UTSMedicalSystem.FrontEnd.Models;
+using UTSMedicalSystem.FrontEnd.BusinessLogic;
 
 namespace UTSMedicalSystem.FrontEnd.Controllers
 {
     public class PatientsController : Controller
     {
         private readonly MedicalSystemContext _context;
+        private UserManager<ApplicationUser> userManager;
 
         public PatientsController(MedicalSystemContext context)
         {
@@ -20,9 +25,37 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         }
 
         // GET: Patients
+        [Authorize]//(Roles = "Patient")]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.ToListAsync());
+            //var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //var users = await userManager.GetUserAsync(HttpContext.User);
+            //var id = users.Id;
+
+            //Original index view
+
+            var medicalSystemContext = _context.Users.Include(a => a.Appointments);
+            ViewBag.thisUsersID = Common.GetUserId(this.User);
+            return View(await medicalSystemContext.ToListAsync());
+
+            
+
+            //return View(await _context.Users.ToListAsync());
+            //if (id == null)
+            //{
+            //    return NotFound();
+            //}
+
+            
+
+            //var user = await _context.Users
+            //    .SingleOrDefaultAsync(m => m.AspNetUserId == id);
+            //if (user == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //return View(user);
         }
 
         // GET: Patients/Details/5
@@ -86,7 +119,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,FirstName,LastName,Username,Password,DOB,UTSID,History,IsPatient,IsDoctor,IsReceptionist")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,AspNetUserId,FirstName,LastName,Username,Password,DOB,UTSID,History,IsPatient,IsDoctor,IsReceptionist")] User user)
         {
             if (id != user.ID)
             {
