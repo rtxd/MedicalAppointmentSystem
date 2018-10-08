@@ -28,7 +28,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         public async Task<IActionResult> Index()
         {
             var medicalSystemContext = _context.Users.Include(a => a.Appointments);
-            ViewBag.thisUsersID = Common.GetUserId(User);
+            ViewBag.thisUsersID = Common.GetUserAspNetId(User);
             return View(await medicalSystemContext.ToListAsync());
         }
 
@@ -65,7 +65,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         {
             if (ModelState.IsValid)
             {
-                user.AspNetUserId = Common.GetUserId(User);
+                user.AspNetUserId = Common.GetUserAspNetId(User);
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

@@ -8,7 +8,14 @@ namespace UTSMedicalSystem.FrontEnd.BusinessLogic
 {
     public static class Common
     {
-        public static string GetUserId(this ClaimsPrincipal user)
+
+        /// <summary>
+        /// This returns the AspNetUserId for the currently
+        /// logged in user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public static string GetUserAspNetId(this ClaimsPrincipal user)
         {
             if (!user.Identity.IsAuthenticated)
                 return null;
@@ -27,5 +34,6 @@ namespace UTSMedicalSystem.FrontEnd.BusinessLogic
 
             return currentUser.FindFirst(ClaimTypes.Role).Value;
         }
+        
     }
 }
