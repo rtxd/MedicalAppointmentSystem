@@ -24,18 +24,19 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         public async Task<IActionResult> Index()
         {
             var medicalSystemContext = _context.Appointments.Include(a => a.Patient);
+            //medicalSystemContext = _context.Appointments.Include(a => a.Doctor);
 
             //Only display appointments for the currently logged in user
-            foreach(User user in _context.Users)
+            foreach (User user in _context.Users)
             {
                 if (Common.GetUserAspNetId(User) == user.AspNetUserId)
                 {
-                    ViewBag.thisUsersID = user.ID;
-                    return View(await medicalSystemContext.ToListAsync());
+                    foreach (Appointment appointment in _context.Appointments)
+                        if (user.ID == appointment.PatientID) return View(await medicalSystemContext.ToListAsync());
                 }
             }
 
-            //If the user made it this far then the user has no appointments so none will be displayed
+            //If the user made it this far then the user has no appointments so an error message will be displayed
             ViewBag.thisUsersID = null;
             return View(await medicalSystemContext.ToListAsync());
         }

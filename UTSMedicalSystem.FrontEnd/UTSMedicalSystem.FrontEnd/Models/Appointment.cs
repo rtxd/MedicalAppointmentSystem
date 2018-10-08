@@ -14,6 +14,6 @@ namespace UTSMedicalSystem.FrontEnd.Models
         public DateTime Time { get; set; }
         public int DoctorID { get; set; }
         public int PatientID { get; set; }
-        public User Patient { get; set; }
+        public virtual User Patient { get; set; }
     }
 }
