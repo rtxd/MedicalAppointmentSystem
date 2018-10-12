@@ -44,6 +44,7 @@ else
         <tbody>
             @foreach (var item in Model)
             {
+                //Check if the appointments patient ID is the same as the current logged in patient
                 @if (item.PatientID == ViewBag.thisUsersID)
                 {
                     <tr>

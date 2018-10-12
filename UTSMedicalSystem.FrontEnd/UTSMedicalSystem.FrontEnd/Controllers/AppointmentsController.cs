@@ -32,7 +32,11 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
                 if (Common.GetUserAspNetId(User) == user.AspNetUserId)
                 {
                     foreach (Appointment appointment in _context.Appointments)
-                        if (user.ID == appointment.PatientID) return View(await medicalSystemContext.ToListAsync());
+                        if (user.ID == appointment.PatientID)
+                        {
+                            ViewBag.thisUsersID = user.ID;
+                            return View(await medicalSystemContext.ToListAsync());
+                        }
                 }
             }
 

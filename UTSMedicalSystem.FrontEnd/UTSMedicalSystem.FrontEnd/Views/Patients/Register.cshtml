@@ -1,16 +1,16 @@
 ﻿@model UTSMedicalSystem.FrontEnd.Models.User
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "View";
 }
 
-<h2>Create</h2>
+<h2>View</h2>
 
 <h4>User</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="View">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
@@ -40,7 +40,7 @@
             <div class="form-group">
                 <div class="checkbox">
                     <label>
-                        <input hidden="hidden" checked="checked" asp-for="IsPatient" /> @Html.DisplayNameFor(model => model.IsPatient)
+                        <input asp-for="IsPatient" /> @Html.DisplayNameFor(model => model.IsPatient)
                     </label>
                 </div>
             </div>

@@ -19,12 +19,6 @@
                     @Html.DisplayNameFor(model => model.LastName)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Username)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Password)
-                </th>
-                <th>
                     @Html.DisplayNameFor(model => model.DOB)
                 </th>
                 <th>
@@ -33,15 +27,6 @@
                 <th>
                     @Html.DisplayNameFor(model => model.History)
                 </th>
-                @*<th>
-                    @Html.DisplayNameFor(model => model.IsPatient)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.IsDoctor)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.IsReceptionist)
-                </th>*@
             <th></th>
         </tr>
     </thead>
@@ -58,12 +43,6 @@
                         @Html.DisplayFor(modelItem => item.LastName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Username)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Password)
-                    </td>
-                    <td>
                         @Html.DisplayFor(modelItem => item.DOB)
                     </td>
                     <td>
@@ -72,19 +51,9 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.History)
                     </td>
-                    @*<td>
-                        @Html.DisplayFor(modelItem => item.IsPatient)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsDoctor)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsReceptionist)
-                    </td>*@
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
                         <a asp-action="Details" asp-route-id="@item.ID">Details</a> 
-                        @*<a asp-action="Delete" asp-route-id="@item.ID">Delete</a>*@
                     </td>
                 </tr>
             }
