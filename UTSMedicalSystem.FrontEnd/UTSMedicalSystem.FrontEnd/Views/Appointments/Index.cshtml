@@ -29,19 +29,9 @@ else
                 <th>
                     @Html.DisplayNameFor(model => model.Time)
                 </th>
-                @switch (ViewBag.role)
-                {
-                    case "Patient":
-                        <th>Doctor</th>
-                        break;
-                    case "Doctor":
-                        <th>Patient</th>
-                        break;
-                    case "Receptionist":
-                        <th>Doctor</th>
-                        <th>Patient</th>
-                        break;
-                }
+                <th>
+                    Doctor
+                </th>
                 <th></th>
             </tr>
         </thead>
@@ -49,43 +39,29 @@ else
             @foreach (var item in Model)
             {
                 //Check if the appointments patient ID is the same as the current logged in patient
-                @if (item.PatientID == ViewBag.thisUsersID || item.DoctorID == ViewBag.thisUsersID || ViewBag.role == "Receptionist")
+                @if (item.PatientID == ViewBag.thisUsersID)
                 {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Location)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Time)
-                </td>
-                @switch (ViewBag.role)
-                {
-                    case "Patient":
-                        <td>@ViewBag.doctorName</td>
-                        break;
-                    case "Doctor":
+                    <tr>
                         <td>
-                            <a asp-action="PatientDetails" asp-route-id="@item.PatientID">@ViewBag.patientName</a>
+                            @Html.DisplayFor(modelItem => item.Title)
                         </td>
-                        break;
-                    case "Receptionist":
-                        <td>@ViewBag.doctorName</td>
-                        <td>@ViewBag.patientName</td>
-                        break;
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Location)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Time)
+                        </td>
+                        <td>
+                            @ViewBag.doctorName
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.ID">Cancel</a>
+                        </td>
+                    </tr>
                 }
-
-
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ID">Cancel</a>
-                </td>
-            </tr>
-                }
-                    }
+            }
         </tbody>
     </table>
 
