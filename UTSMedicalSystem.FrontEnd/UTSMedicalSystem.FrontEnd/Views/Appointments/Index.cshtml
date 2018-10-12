@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>Your Appointments</h2>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -33,10 +33,7 @@ else
                     @Html.DisplayNameFor(model => model.Time)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.DoctorID)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Patient)
+                    Doctor
                 </th>
                 <th></th>
             </tr>
@@ -61,10 +58,7 @@ else
                             @Html.DisplayFor(modelItem => item.Time)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.DoctorID)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Patient.FirstName)
+                            @ViewBag.doctorName
                         </td>
                         <td>
                             <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |

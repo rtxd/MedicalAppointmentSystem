@@ -13,6 +13,17 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
 {
     public class AppointmentsController : Controller
     {
+        private string getDoctorName(int id)
+        {
+            foreach(User doctor in _context.Users)
+            {
+                if (doctor.ID == id)
+                    return doctor.FirstName;
+            }
+            return null;
+
+        }
+
         private readonly MedicalSystemContext _context;
 
         public AppointmentsController(MedicalSystemContext context)
@@ -35,6 +46,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
                         if (user.ID == appointment.PatientID)
                         {
                             ViewBag.thisUsersID = user.ID;
+                            ViewBag.doctorName = getDoctorName(appointment.DoctorID);
                             return View(await medicalSystemContext.ToListAsync());
                         }
                 }
