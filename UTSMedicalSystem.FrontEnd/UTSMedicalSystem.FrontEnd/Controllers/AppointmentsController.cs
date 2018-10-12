@@ -20,7 +20,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
                 if (doctor.ID == id)
                     return doctor.FirstName;
             }
-            return null;
+            return "Error: Invalid Doctor ID";
 
         }
 
@@ -45,6 +45,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
                     foreach (Appointment appointment in _context.Appointments)
                         if (user.ID == appointment.PatientID)
                         {
+                            ViewBag.role = user.Role;
                             ViewBag.thisUsersID = user.ID;
                             ViewBag.doctorName = getDoctorName(appointment.DoctorID);
                             return View(await medicalSystemContext.ToListAsync());

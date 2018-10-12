@@ -61,7 +61,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,AspNetUserId,FirstName,LastName,Username,Password,DOB,UTSID,History,IsPatient,IsDoctor,IsReceptionist")] User user)
+        public async Task<IActionResult> Create([Bind("ID,AspNetUserId,FirstName,LastName,Username,Password,DOB,UTSID,History,Role")] User user)
         {
             if (ModelState.IsValid)
             {
@@ -94,7 +94,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,AspNetUserId,FirstName,LastName,Username,Password,DOB,UTSID,History,IsPatient,IsDoctor,IsReceptionist")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,AspNetUserId,FirstName,LastName,Username,Password,DOB,UTSID,History,Role")] User user)
         {
             if (id != user.ID)
             {

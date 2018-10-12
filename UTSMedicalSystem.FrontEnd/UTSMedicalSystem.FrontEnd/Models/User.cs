@@ -14,9 +14,7 @@ namespace UTSMedicalSystem.FrontEnd.Models
         public string DOB { get; set; }
         public string UTSID { get; set; }
         public string History { get; set; }
-        public bool IsPatient { get; set; }
-        public bool IsDoctor { get; set; }
-        public bool IsReceptionist { get; set; }
+        public string Role { get; set; }
 
         public ICollection<Appointment> Appointments { get; set; }
     }

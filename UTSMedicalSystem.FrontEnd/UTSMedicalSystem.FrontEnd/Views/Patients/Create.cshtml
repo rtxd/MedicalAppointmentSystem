@@ -38,25 +38,9 @@
                 <span asp-validation-for="History" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input hidden="hidden" checked="checked" asp-for="IsPatient" /> @Html.DisplayNameFor(model => model.IsPatient)
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="IsDoctor" /> @Html.DisplayNameFor(model => model.IsDoctor)
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="IsReceptionist" /> @Html.DisplayNameFor(model => model.IsReceptionist)
-                    </label>
-                </div>
+                <label asp-for="Role" class="control-label"></label>
+                <input asp-for="Role" class="form-control" />
+                <span asp-validation-for="Role" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />

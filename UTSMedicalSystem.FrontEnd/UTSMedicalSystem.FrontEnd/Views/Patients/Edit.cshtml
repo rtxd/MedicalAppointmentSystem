@@ -28,16 +28,6 @@
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Username" class="control-label"></label>
-                <input asp-for="Username" class="form-control" />
-                <span asp-validation-for="Username" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="DOB" class="control-label"></label>
                 <input asp-for="DOB" class="form-control" />
                 <span asp-validation-for="DOB" class="text-danger"></span>
@@ -52,9 +42,11 @@
                 <input asp-for="History" class="form-control" />
                 <span asp-validation-for="History" class="text-danger"></span>
             </div>
-                        <input type="hidden" asp-for="IsPatient" /> @*Html.DisplayNameFor(model => model.IsPatient)*@
-                        <input type="hidden" asp-for="IsDoctor" /> @*@Html.DisplayNameFor(model => model.IsDoctor)*@
-                        <input type="hidden" asp-for="IsReceptionist" /> @*@Html.DisplayNameFor(model => model.IsReceptionist)*@
+            <div class="form-group">
+                <label asp-for="Role" class="control-label"></label>
+                <input asp-for="Role" class="form-control" />
+                <span asp-validation-for="Role" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />
             </div>
