@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using UTSMedicalSystem.FrontEnd.Data;
+using UTSMedicalSystem.FrontEnd.Models;
 
 namespace UTSMedicalSystem.FrontEnd.BusinessLogic
 {
@@ -25,15 +27,17 @@ namespace UTSMedicalSystem.FrontEnd.BusinessLogic
             return currentUser.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
 
-        public static string GetUserRole(this ClaimsPrincipal user)
+        public static string GetUserRole(MedicalSystemContext _context, ClaimsPrincipal loggedInUser)
         {
-            if (!user.Identity.IsAuthenticated)
-                return null;
+            var userRole = from User in _context.Users
+                           where User.AspNetUserId == loggedInUser.FindFirst(ClaimTypes.NameIdentifier).Value
+                           select User.Role;
 
-            ClaimsPrincipal currentUser = user;
-
-            return currentUser.FindFirst(ClaimTypes.Role).Value;
+            foreach (var role in userRole) return role;
+            return null;
         }
+
+        
         
     }
 }

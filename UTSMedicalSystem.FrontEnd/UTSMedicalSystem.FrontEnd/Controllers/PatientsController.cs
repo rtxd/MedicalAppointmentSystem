@@ -28,7 +28,9 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         public async Task<IActionResult> Index()
         {
             var medicalSystemContext = _context.Users.Include(a => a.Appointments);
-            ViewBag.thisUsersID = Common.GetUserAspNetId(User);
+            string aspNetUserID = Common.GetUserAspNetId(User);
+            ViewBag.thisUsersID = aspNetUserID;
+            ViewBag.role = Common.GetUserRole(_context, User);
             return View(await medicalSystemContext.ToListAsync());
         }
 

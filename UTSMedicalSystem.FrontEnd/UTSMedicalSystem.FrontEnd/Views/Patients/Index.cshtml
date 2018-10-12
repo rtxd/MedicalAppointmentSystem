@@ -33,7 +33,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            @if (item.AspNetUserId == ViewBag.thisUsersID)
+            @if (item.AspNetUserId == ViewBag.thisUsersID || ViewBag.role == "Receptionist")
             {
                 <tr>
                     <td>
