@@ -18,7 +18,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
             foreach(User doctor in _context.Users)
             {
                 if (doctor.ID == id)
-                    return doctor.FirstName;
+                    return "Dr " + doctor.LastName;
             }
             return "Error: Invalid Doctor ID";
 
