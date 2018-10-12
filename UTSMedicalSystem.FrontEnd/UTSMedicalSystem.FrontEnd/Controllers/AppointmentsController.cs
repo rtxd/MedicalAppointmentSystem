@@ -13,17 +13,14 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
 {
     public class AppointmentsController : Controller
     {
-        private string getName(int id)
+        private string getDoctorName(int id)
         {
-            foreach(User user in _context.Users)
+            foreach(User doctor in _context.Users)
             {
-                if (user.ID == id)
-                    if (user.Role == "Doctor")
-                    {
-                        return "Dr " + user.LastName;
-                    } else return user.FirstName + " "+ user.LastName;
+                if (doctor.ID == id)
+                    return doctor.FirstName;
             }
-            return "Error: Invalid User";
+            return "Error: Invalid Doctor ID";
 
         }
 
@@ -38,6 +35,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         public async Task<IActionResult> Index()
         {
             var medicalSystemContext = _context.Appointments.Include(a => a.Patient);
+            //medicalSystemContext = _context.Appointments.Include(a => a.Doctor);
 
             //Only display appointments for the currently logged in user
             foreach (User user in _context.Users)
@@ -45,16 +43,11 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
                 if (Common.GetUserAspNetId(User) == user.AspNetUserId)
                 {
                     foreach (Appointment appointment in _context.Appointments)
-                        if (user.ID == appointment.PatientID || user.ID == appointment.DoctorID || user.Role == "Receptionist")
+                        if (user.ID == appointment.PatientID)
                         {
-
-                            //Set variables for view here
                             ViewBag.role = user.Role;
                             ViewBag.thisUsersID = user.ID;
-                            ViewBag.doctorName = getName(appointment.DoctorID);
-                            ViewBag.patientName = getName(appointment.PatientID);
-                            
-                            //Return the view
+                            ViewBag.doctorName = getDoctorName(appointment.DoctorID);
                             return View(await medicalSystemContext.ToListAsync());
                         }
                 }
@@ -63,25 +56,6 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
             //If the user made it this far then the user has no appointments so an error message will be displayed
             ViewBag.thisUsersID = null;
             return View(await medicalSystemContext.ToListAsync());
-        }
-
-        //GET: Appointments/PatientDetails/5
-        public async Task<IActionResult> PatientDetails(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var patient = await _context.Users
-                .Include(a => a.Appointments)
-                .SingleOrDefaultAsync(m => m.ID == id);
-            if (patient == null)
-            {
-                return NotFound();
-            }
-
-            return View(patient);
         }
 
         // GET: Appointments/Details/5
@@ -106,9 +80,90 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         // GET: Appointments/Create
         public IActionResult Create()
         {
-            ViewData["PatientID"] = new SelectList(_context.Users, "ID", "ID");
+            List<SelectListItem> dList = _context.Users.Where(d => d.Role == "Doctor").Select(d => new SelectListItem
+            {
+                Value = d.ID.ToString(),
+                Text = "Dr. " + d.FirstName.Substring(0,1) + ". " + d.LastName
+            }).ToList();
+            List<SelectListItem> pList = _context.Users.Where(p => p.Role == "Patient").Select(p => new SelectListItem
+            {
+                Value = p.ID.ToString(),
+                Text = p.LastName + ", " + p.FirstName
+            }).ToList();
+
+
+            dList.Insert(0, (new SelectListItem { Text = "No Preference", Value = "-1" }));
+
+            ViewData["DoctorID"] = dList;
+            ViewData["PatientID"] = pList;
+            
+           
             return View();
         }
+
+
+        // POST: Appointments/Create -- Query Appointment Available Time Slots
+        [HttpPost]
+        public IActionResult GetTimeSlots([FromBody]Newtonsoft.Json.Linq.JObject message)
+        {
+            string selDate = (string)message["date"];
+            int selDoctor = (int)message["doctor"];
+
+            if (String.IsNullOrEmpty(selDate))
+            {
+                selDate = DateTime.Today.ToString("dd/MM/yyyy");
+            }
+
+            List<string> BookedSlots = new List<string>();
+            if (selDoctor != -1) 
+            {
+                // Doctor Selected
+                BookedSlots = (from a in _context.Appointments
+                                  where a.Time.Date.ToString("dd/MM/yyyy") == selDate && a.DoctorID == selDoctor
+                                  select a.Time.ToString("hh:mm tt")).ToList();
+            } else {
+                //No Doctor Selected
+                //BookedSlots = null;
+                Dictionary<string, int> counts = new Dictionary<string, int>();
+
+
+                //var Doctors = from d in _context.Users
+                //              where d.Role == "Doctor"
+                //              select d.ID;
+
+                //var AllBookedSlots = (from a in _context.Appointments
+                //               where a.Time.Date.ToString("dd/MM/yyyy") == selDate
+                           
+                //               select a.Time.ToString("hh:mm tt")).ToList();
+
+                //BookedSlots = AllBookedSlots.GroupBy(s => s);
+
+            }
+
+
+            List<string> timeSlots = new List<string> {"09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM",
+                                                        "01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM"};
+
+
+            foreach (var slot in BookedSlots)
+            {
+                timeSlots.Remove(slot);
+            }
+
+            List<SelectListItem> slotsList = timeSlots.ConvertAll(a =>
+            {
+                return new SelectListItem()
+                {
+                    Text = a.ToString(),
+                    Value = a.ToString(),
+                    Selected = false
+
+                };
+            });
+
+            return Json(slotsList);
+        }
+
 
         // POST: Appointments/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -117,6 +172,8 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Title,Notes,Location,Time,DoctorID,PatientID")] Appointment appointment)
         {
+            
+
             if (ModelState.IsValid)
             {
                 _context.Add(appointment);
