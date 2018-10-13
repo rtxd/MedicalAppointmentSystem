@@ -13,14 +13,18 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
 {
     public class AppointmentsController : Controller
     {
-        private string getDoctorName(int id)
+        private string getName(int id)
         {
-            foreach(User doctor in _context.Users)
+            foreach (User user in _context.Users)
             {
-                if (doctor.ID == id)
-                    return doctor.FirstName;
+                if (user.ID == id)
+                    if (user.Role == "Doctor")
+                    {
+                        return "Dr " + user.LastName;
+                    }
+                    else return user.FirstName + " " + user.LastName;
             }
-            return "Error: Invalid Doctor ID";
+            return "Error: Invalid User";
 
         }
 
@@ -35,7 +39,6 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         public async Task<IActionResult> Index()
         {
             var medicalSystemContext = _context.Appointments.Include(a => a.Patient);
-            //medicalSystemContext = _context.Appointments.Include(a => a.Doctor);
 
             //Only display appointments for the currently logged in user
             foreach (User user in _context.Users)
@@ -43,11 +46,16 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
                 if (Common.GetUserAspNetId(User) == user.AspNetUserId)
                 {
                     foreach (Appointment appointment in _context.Appointments)
-                        if (user.ID == appointment.PatientID)
+                        if (user.ID == appointment.PatientID || user.ID == appointment.DoctorID || user.Role == "Receptionist")
                         {
+
+                            //Set variables for view here
                             ViewBag.role = user.Role;
                             ViewBag.thisUsersID = user.ID;
-                            ViewBag.doctorName = getDoctorName(appointment.DoctorID);
+                            ViewBag.doctorName = getName(appointment.DoctorID);
+                            ViewBag.patientName = getName(appointment.PatientID);
+
+                            //Return the view
                             return View(await medicalSystemContext.ToListAsync());
                         }
                 }
@@ -56,6 +64,25 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
             //If the user made it this far then the user has no appointments so an error message will be displayed
             ViewBag.thisUsersID = null;
             return View(await medicalSystemContext.ToListAsync());
+        }
+
+        //GET: Appointments/PatientDetails/5
+        public async Task<IActionResult> PatientDetails(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var patient = await _context.Users
+                .Include(a => a.Appointments)
+                .SingleOrDefaultAsync(m => m.ID == id);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+
+            return View(patient);
         }
 
         // GET: Appointments/Details/5
@@ -69,6 +96,10 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
             var appointment = await _context.Appointments
                 .Include(a => a.Patient)
                 .SingleOrDefaultAsync(m => m.ID == id);
+
+            ViewBag.Patientname = getName(appointment.PatientID);
+            ViewBag.Doctorname = getName(appointment.DoctorID);
+
             if (appointment == null)
             {
                 return NotFound();
@@ -170,7 +201,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,Notes,Location,Time,DoctorID,PatientID")] Appointment appointment)
+        public async Task<IActionResult> Create([Bind("ID,Notes,Location,Time,DoctorID,PatientID")] Appointment appointment)
         {
             
 

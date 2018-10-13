@@ -35,16 +35,16 @@
             @Html.DisplayFor(model => model.Time)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.DoctorID)
+            Doctor
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.DoctorID)
+            @ViewBag.Doctorname
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Patient)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Patient.ID)
+            @ViewBag.Patientname
         </dd>
     </dl>
 </div>

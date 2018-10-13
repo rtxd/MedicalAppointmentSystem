@@ -13,19 +13,19 @@
     <thead>
         <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.FirstName)
+                    First Name
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.LastName)
+                    Last Name
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.DOB)
+                    DOB
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.UTSID)
+                    UTS ID
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.History)
+                    History
                 </th>
             <th></th>
         </tr>
@@ -33,7 +33,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            @if (item.AspNetUserId == ViewBag.thisUsersID)
+            @if (item.AspNetUserId == ViewBag.thisUsersID || ViewBag.role == "Receptionist")
             {
                 <tr>
                     <td>
