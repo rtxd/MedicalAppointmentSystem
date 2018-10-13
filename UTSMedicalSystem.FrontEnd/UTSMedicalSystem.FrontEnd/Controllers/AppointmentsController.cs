@@ -96,6 +96,10 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
             var appointment = await _context.Appointments
                 .Include(a => a.Patient)
                 .SingleOrDefaultAsync(m => m.ID == id);
+
+            ViewBag.Patientname = getName(appointment.PatientID);
+            ViewBag.Doctorname = getName(appointment.DoctorID);
+
             if (appointment == null)
             {
                 return NotFound();
