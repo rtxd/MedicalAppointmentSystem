@@ -145,7 +145,10 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
                 selDate = DateTime.Today.ToString("dd/MM/yyyy");
             }
 
+
+
             List<string> BookedSlots = new List<string>();
+
             if (selDoctor != -1) 
             {
                 // Doctor Selected
@@ -154,21 +157,21 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
                                   select a.Time.ToString("hh:mm tt")).ToList();
             } else {
                 //No Doctor Selected
-                //BookedSlots = null;
-                Dictionary<string, int> counts = new Dictionary<string, int>();
+                var doctorCount = _context.Users.Count(n => n.Role == "Doctor");
 
+                var AllBookedSlots = (from a in _context.Appointments
+                                      where a.Time.Date.ToString("dd/MM/yyyy") == selDate
+                                      select a.Time.ToString("hh:mm tt")).ToList();
 
-                //var Doctors = from d in _context.Users
-                //              where d.Role == "Doctor"
-                //              select d.ID;
+                var dict = AllBookedSlots.GroupBy(s => s).ToDictionary(g => g.Key, g => g.Count());
 
-                //var AllBookedSlots = (from a in _context.Appointments
-                //               where a.Time.Date.ToString("dd/MM/yyyy") == selDate
-                           
-                //               select a.Time.ToString("hh:mm tt")).ToList();
-
-                //BookedSlots = AllBookedSlots.GroupBy(s => s);
-
+                foreach (var d in dict)
+                {
+                    if (d.Value == doctorCount)
+                    {
+                        BookedSlots.Add(d.Key);
+                    }
+                }
             }
 
 
@@ -204,6 +207,26 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         public async Task<IActionResult> Create([Bind("ID,Notes,Location,Time,DoctorID,PatientID")] Appointment appointment)
         {
             
+            //Handle No Doctor Preference
+            if (appointment.DoctorID == -1)
+            {
+                var busyDoctors = from s in _context.Appointments
+                           where s.Time == appointment.Time
+                           select s.DoctorID;
+
+                var freeDoctors = from d in _context.Users
+                                  where d.Role == "Doctor" && busyDoctors.All(b => b != d.ID)
+                                  select d.ID;
+
+                if (freeDoctors.Count() != 0)
+                {
+                    appointment.DoctorID = freeDoctors.First();
+                }
+                
+
+
+            }
+
 
             if (ModelState.IsValid)
             {
