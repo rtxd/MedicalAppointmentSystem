@@ -21,9 +21,6 @@ else
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Title)
-                </th>
-                <th>
                     @Html.DisplayNameFor(model => model.Location)
                 </th>
                 <th>
@@ -53,9 +50,6 @@ else
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Title)
-                        </td>
-                        <td>
                             @Html.DisplayFor(modelItem => item.Location)
                         </td>
                         <td>
@@ -73,7 +67,7 @@ else
                                 break;
                             case "Receptionist":
                                 <td>@ViewBag.doctorName</td>
-                                <td>@ViewBag.patientName</td>
+                                <td>@(item.Patient.FirstName + " " + item.Patient.LastName)</td>
                                 break;
                         }
 

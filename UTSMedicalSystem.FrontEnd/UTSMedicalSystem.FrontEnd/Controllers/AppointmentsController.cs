@@ -201,7 +201,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,Notes,Location,Time,DoctorID,PatientID")] Appointment appointment)
+        public async Task<IActionResult> Create([Bind("ID,Notes,Location,Time,DoctorID,PatientID")] Appointment appointment)
         {
             
 

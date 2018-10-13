@@ -8,7 +8,6 @@ namespace UTSMedicalSystem.FrontEnd.Models
     public class Appointment
     {
         public int ID { get; set; }
-        public string Title { get; set; }
         public string Notes { get; set; }
         public string Location { get; set; }
         public DateTime Time { get; set; }
