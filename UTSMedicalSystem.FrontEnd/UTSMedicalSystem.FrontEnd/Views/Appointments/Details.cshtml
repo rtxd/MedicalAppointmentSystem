@@ -4,36 +4,12 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
+<h2>Upcoming Appointment Details</h2>
 
 <div>
-    <h4>Appointment</h4>
+    <h4>@ViewBag.Patientname</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Notes)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Notes)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Location)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Location)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Time)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Time)
-        </dd>
         <dt>
             Doctor
         </dt>
@@ -41,10 +17,23 @@
             @ViewBag.Doctorname
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.Patient)
+            Date
         </dt>
         <dd>
-            @ViewBag.Patientname
+            @Model.Time.Date.ToString("dd/MM/yyyy")
+        </dd>
+        <dt>
+            Time
+        </dt>
+        <dd>
+            @Model.Time.Date.ToString("hh:mm tt")
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Location)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Location)
         </dd>
     </dl>
 </div>

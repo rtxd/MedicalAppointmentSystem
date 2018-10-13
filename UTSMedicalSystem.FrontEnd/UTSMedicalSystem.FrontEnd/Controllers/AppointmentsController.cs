@@ -39,6 +39,8 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         public async Task<IActionResult> Index()
         {
             var medicalSystemContext = _context.Appointments.Include(a => a.Patient);
+            
+            
 
             //Only display appointments for the currently logged in user
             foreach (User user in _context.Users)
@@ -52,6 +54,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
                             //Set variables for view here
                             ViewBag.role = user.Role;
                             ViewBag.thisUsersID = user.ID;
+                            // This sets every label using .doctorName to the same thing - only holds 1 val
                             ViewBag.doctorName = getName(appointment.DoctorID);
                             ViewBag.patientName = getName(appointment.PatientID);
 
@@ -122,13 +125,17 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
                 Text = p.LastName + ", " + p.FirstName
             }).ToList();
 
-
             dList.Insert(0, (new SelectListItem { Text = "No Preference", Value = "-1" }));
 
             ViewData["DoctorID"] = dList;
             ViewData["PatientID"] = pList;
-            
-           
+
+            var curUserRole = from u in _context.Users
+                              where u.AspNetUserId == (Common.GetUserAspNetId(User))
+                              select u.Role;
+
+            ViewData["Role"] = curUserRole.First();
+
             return View();
         }
 
@@ -206,7 +213,16 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Notes,Location,Time,DoctorID,PatientID")] Appointment appointment)
         {
-            
+            //Link Patient ID if Patient Using System
+            if (appointment.PatientID == -1)
+            {
+                var pat = from u in _context.Users
+                          where u.AspNetUserId == Common.GetUserAspNetId(User)
+                          select u.ID;
+                appointment.PatientID = pat.First();
+            }
+
+
             //Handle No Doctor Preference
             if (appointment.DoctorID == -1)
             {
@@ -222,11 +238,8 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
                 {
                     appointment.DoctorID = freeDoctors.First();
                 }
-                
-
 
             }
-
 
             if (ModelState.IsValid)
             {
@@ -251,7 +264,23 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
             {
                 return NotFound();
             }
-            ViewData["PatientID"] = new SelectList(_context.Users, "ID", "ID", appointment.PatientID);
+
+            List<SelectListItem> dList = _context.Users.Where(d => d.Role == "Doctor").Select(d => new SelectListItem
+            {
+                Value = d.ID.ToString(),
+                Text = "Dr. " + d.FirstName.Substring(0, 1) + ". " + d.LastName
+            }).ToList();
+            List<SelectListItem> pList = _context.Users.Where(p => p.Role == "Patient").Select(p => new SelectListItem
+            {
+                Value = p.ID.ToString(),
+                Text = p.LastName + ", " + p.FirstName
+            }).ToList();
+
+            dList.Insert(0, (new SelectListItem { Text = "No Preference", Value = "-1" }));
+
+            ViewData["DoctorID"] = dList;
+            ViewData["PatientID"] = pList;
+
             return View(appointment);
         }
 
@@ -306,6 +335,8 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
             {
                 return NotFound();
             }
+
+
 
             return View(appointment);
         }
