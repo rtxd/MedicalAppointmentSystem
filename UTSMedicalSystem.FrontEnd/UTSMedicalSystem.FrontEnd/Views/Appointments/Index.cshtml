@@ -62,7 +62,7 @@ else
                                 break;
                             case "Doctor":
                                 <td>
-                                    <a asp-action="PatientDetails" asp-route-id="@item.PatientID">@ViewBag.patientName</a>
+                                    <a asp-action="PatientDetails" asp-route-id="@item.PatientID">@(item.Patient.FirstName + " " + item.Patient.LastName)</a>
                                 </td>
                                 break;
                             case "Receptionist":
