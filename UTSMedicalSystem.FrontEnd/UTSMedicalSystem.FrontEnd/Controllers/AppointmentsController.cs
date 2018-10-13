@@ -80,9 +80,90 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         // GET: Appointments/Create
         public IActionResult Create()
         {
-            ViewData["PatientID"] = new SelectList(_context.Users, "ID", "ID");
+            List<SelectListItem> dList = _context.Users.Where(d => d.Role == "Doctor").Select(d => new SelectListItem
+            {
+                Value = d.ID.ToString(),
+                Text = "Dr. " + d.FirstName.Substring(0,1) + ". " + d.LastName
+            }).ToList();
+            List<SelectListItem> pList = _context.Users.Where(p => p.Role == "Patient").Select(p => new SelectListItem
+            {
+                Value = p.ID.ToString(),
+                Text = p.LastName + ", " + p.FirstName
+            }).ToList();
+
+
+            dList.Insert(0, (new SelectListItem { Text = "No Preference", Value = "-1" }));
+
+            ViewData["DoctorID"] = dList;
+            ViewData["PatientID"] = pList;
+            
+           
             return View();
         }
+
+
+        // POST: Appointments/Create -- Query Appointment Available Time Slots
+        [HttpPost]
+        public IActionResult GetTimeSlots([FromBody]Newtonsoft.Json.Linq.JObject message)
+        {
+            string selDate = (string)message["date"];
+            int selDoctor = (int)message["doctor"];
+
+            if (String.IsNullOrEmpty(selDate))
+            {
+                selDate = DateTime.Today.ToString("dd/MM/yyyy");
+            }
+
+            List<string> BookedSlots = new List<string>();
+            if (selDoctor != -1) 
+            {
+                // Doctor Selected
+                BookedSlots = (from a in _context.Appointments
+                                  where a.Time.Date.ToString("dd/MM/yyyy") == selDate && a.DoctorID == selDoctor
+                                  select a.Time.ToString("hh:mm tt")).ToList();
+            } else {
+                //No Doctor Selected
+                //BookedSlots = null;
+                Dictionary<string, int> counts = new Dictionary<string, int>();
+
+
+                //var Doctors = from d in _context.Users
+                //              where d.Role == "Doctor"
+                //              select d.ID;
+
+                //var AllBookedSlots = (from a in _context.Appointments
+                //               where a.Time.Date.ToString("dd/MM/yyyy") == selDate
+                           
+                //               select a.Time.ToString("hh:mm tt")).ToList();
+
+                //BookedSlots = AllBookedSlots.GroupBy(s => s);
+
+            }
+
+
+            List<string> timeSlots = new List<string> {"09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM",
+                                                        "01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM"};
+
+
+            foreach (var slot in BookedSlots)
+            {
+                timeSlots.Remove(slot);
+            }
+
+            List<SelectListItem> slotsList = timeSlots.ConvertAll(a =>
+            {
+                return new SelectListItem()
+                {
+                    Text = a.ToString(),
+                    Value = a.ToString(),
+                    Selected = false
+
+                };
+            });
+
+            return Json(slotsList);
+        }
+
 
         // POST: Appointments/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
@@ -91,6 +172,8 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ID,Title,Notes,Location,Time,DoctorID,PatientID")] Appointment appointment)
         {
+            
+
             if (ModelState.IsValid)
             {
                 _context.Add(appointment);
