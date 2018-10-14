@@ -11,36 +11,32 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <div>
-            <h4>Existing Appointment Details</h4>
-            <label>Existing Date: @Model.Time.Date.ToString("dd/MM/yyyy")</label><br />
-            <label>Existing Time: @Model.Time.Date.ToString("hh:mm tt")</label>
-        </div>
-        <hr />
         <form asp-action="Create">
             <h4>New Appointment Details</h4>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label>Please Select A Doctor</label>
                 <select asp-for="DoctorID" id="selectedDoctor" class="form-control" asp-items="ViewBag.DoctorID"></select>
+                
             </div>
             <div class="form-group">
 
                 <label>Please Select A Date</label>
                 <div id="datepicker" data-provide="datepicker-inline"></div>
                 <input id="datepicker_input" class="hidden" placeholder="dd/mm/yyyy" />
-                <label>Old Date: @Model.Time.Date.ToString("dd/MM/yyyy")</label><br />
+                <label>Existing Date: @Model.Time.Date.ToShortDateString()</label><br />
             </div>
             <div>
                 <label>Please Select A Time</label>
                 <select class="form-control" id="timeSlots" asp-items="@{new SelectList(string.Empty, "Value", "Text")}"></select>
+                <label>Existing Time: @Model.Time.ToShortTimeString()</label>
             </div>
             <input asp-for="Time" class="hidden" id="modelTime" />
             <input asp-for="Location" class="hidden" value="UTS" />
             <hr />
 
             <div class="form-group">
-                <input type="submit" value="Edit" class="btn btn-default" />
+                <input type="submit" value="Edit" class="btn btn-primary" />
             </div>
 
         </form>
