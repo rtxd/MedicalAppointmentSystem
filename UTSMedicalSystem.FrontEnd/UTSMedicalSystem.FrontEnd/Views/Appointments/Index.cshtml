@@ -16,7 +16,7 @@ public static string getDoctorsName(int ID)
     foreach (User user in UTSMedicalSystem.FrontEnd.Controllers.AppointmentsController.listOfUsers)
     {
         if (user.ID == ID)
-            return (user.FirstName + " " + user.LastName);
+            return ("Dr. " + user.LastName);
 
     }
     return null;
