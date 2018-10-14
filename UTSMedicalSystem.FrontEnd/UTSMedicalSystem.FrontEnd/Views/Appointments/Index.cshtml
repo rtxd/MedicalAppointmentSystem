@@ -60,7 +60,7 @@ else
             @foreach (var item in Model)
             {
                 //Check if the appointments patient ID is the same as the current logged in patient
-                @if (item.PatientID == ViewBag.thisUsersID || item.DoctorID == ViewBag.thisUsersID || ViewBag.role == "Receptionist")
+                @if (item.PatientID == ViewBag.thisUsersID || item.DoctorID == ViewBag.thisUsersID || ViewBag.role == "Receptionist" || ViewBag.role == "Admin")
                 {
             <tr>
                 <td>

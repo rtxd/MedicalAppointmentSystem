@@ -56,9 +56,8 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
                 if (Common.GetUserAspNetId(User) == user.AspNetUserId)
                 {
                     foreach (Appointment appointment in _context.Appointments)
-                        if (user.ID == appointment.PatientID || user.ID == appointment.DoctorID || user.Role == "Receptionist")
+                        if (user.ID == appointment.PatientID || user.ID == appointment.DoctorID || user.Role == "Receptionist" || user.Role == "Admin")
                         {
-
                             //Set variables for view here
                             ViewBag.role = user.Role;
                             ViewBag.thisUsersID = user.ID;
