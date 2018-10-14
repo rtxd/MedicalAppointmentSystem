@@ -292,7 +292,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
                 ViewData["Role"] = "None";
             }
 
-            return View(appointment);
+            return View();
         }
 
         // GET: Appointments/Edit/5
