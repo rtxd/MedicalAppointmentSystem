@@ -261,6 +261,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["PatientID"] = new SelectList(_context.Users, "ID", "ID", appointment.PatientID);
+            ViewData["Role"] = "None";
             return View(appointment);
         }
 
