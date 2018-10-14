@@ -22,10 +22,10 @@ namespace UnitTestProject.Testing
         public void TestingCalculateUserAgeNumber()
         {
             var result1 = Common.CalculateUserAge("01/01/2000");
-            var result2 = Common.CalculateUserAge("12/01/2000");
+            var result2 = Common.CalculateUserAge("12/12/2000");
             //assert 
-            Assert.AreEqual<int>(18, result1,"error calculating the age");
-            Assert.AreEqual<int>(17, result2, "error calculating the age");
+            Assert.AreEqual(18, result1,"error calculating the age");
+            Assert.AreEqual(17, result2, "error calculating the age");
         }
     }
 }

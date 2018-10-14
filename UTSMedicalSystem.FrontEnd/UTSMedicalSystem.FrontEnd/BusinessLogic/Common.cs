@@ -45,7 +45,5 @@ namespace UTSMedicalSystem.FrontEnd.BusinessLogic
             if (birthdate > today.AddYears(-age)) age--;
             return age;
         }
-        
-        
     }
 }
