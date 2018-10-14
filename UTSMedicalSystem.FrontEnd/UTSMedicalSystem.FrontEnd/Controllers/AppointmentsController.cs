@@ -35,9 +35,17 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
             _context = context;
         }
 
+        public static List<User> listOfUsers = new List<User>();
+
         // GET: Appointments
         public async Task<IActionResult> Index()
         {
+            
+            foreach(User user in _context.Users)
+            {
+                listOfUsers.Add(user);
+            }
+
             var medicalSystemContext = _context.Appointments.Include(a => a.Patient);
             
             
@@ -102,6 +110,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
 
             ViewBag.Patientname = getName(appointment.PatientID);
             ViewBag.Doctorname = getName(appointment.DoctorID);
+            ViewBag.AppointmentTime = appointment.Time.ToShortTimeString();
 
             if (appointment == null)
             {

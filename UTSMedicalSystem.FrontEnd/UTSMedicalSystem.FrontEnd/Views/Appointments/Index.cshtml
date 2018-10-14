@@ -10,6 +10,19 @@
     <a asp-action="Create">Create New</a>
 </p>
 
+@functions {
+public static string getDoctorsName(int ID)
+{
+    foreach (User user in UTSMedicalSystem.FrontEnd.Controllers.AppointmentsController.listOfUsers)
+    {
+        if (user.ID == ID)
+            return ("Dr. " + user.LastName);
+
+    }
+    return null;
+}
+}
+
 @if (ViewBag.thisUsersID == null)
 {
     <h3>You currently don't have any appointements</h3>
@@ -35,11 +48,12 @@ else
                         <th>Patient</th>
                         break;
                     case "Receptionist":
-                        <th>Doctor</th>
+                        <th>Patient</th>
+                        break;
+                    case "Admin":
                         <th>Patient</th>
                         break;
                 }
-                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -48,36 +62,40 @@ else
                 //Check if the appointments patient ID is the same as the current logged in patient
                 @if (item.PatientID == ViewBag.thisUsersID || item.DoctorID == ViewBag.thisUsersID || ViewBag.role == "Receptionist")
                 {
-                    <tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Time)
+                </td>
+                @switch (ViewBag.role)
+                {
+                    case "Patient":
+                        <td>@getDoctorsName(item.DoctorID)</td>
+                        break;
+                    case "Doctor":
                         <td>
-                            @Html.DisplayFor(modelItem => item.Location)
+                            <a asp-action="PatientDetails" asp-route-id="@item.PatientID">@(item.Patient.FirstName + " " + item.Patient.LastName)</a>
                         </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Time)
-                        </td>
-                        @switch (ViewBag.role)
-                        {
-                            case "Patient":
-                                <td>@ViewBag.doctorName</td>
-                                break;
-                            case "Doctor":
-                                <td>
-                                    <a asp-action="PatientDetails" asp-route-id="@item.PatientID">@(item.Patient.FirstName + " " + item.Patient.LastName)</a>
-                                </td>
-                                break;
-                            case "Receptionist":
-                                <td>@ViewBag.doctorName</td>
-                                <td>@(item.Patient.FirstName + " " + item.Patient.LastName)</td>
-                                break;
-                        }
+                        break;
+                    case "Receptionist":
+                        <td>@getDoctorsName(item.DoctorID)</td>
+                        <td><a asp-action="PatientDetails" asp-route-id="@item.PatientID">@(item.Patient.FirstName + " " + item.Patient.LastName)</a></td>
+                        break;
+                    case "Admin":
+                        <td>@getDoctorsName(item.DoctorID)</td>
+                        <td><a asp-action="PatientDetails" asp-route-id="@item.PatientID">@(item.Patient.FirstName + " " + item.Patient.LastName)</a></td>
+                        break;
+                }
 
 
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.ID">Cancel</a>
-                        </td>
-                    </tr>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Cancel</a>
+                </td>
+            </tr>
                 }
             }
         </tbody>
