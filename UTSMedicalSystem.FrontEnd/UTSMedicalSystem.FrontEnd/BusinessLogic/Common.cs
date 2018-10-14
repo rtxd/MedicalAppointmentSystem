@@ -37,10 +37,10 @@ namespace UTSMedicalSystem.FrontEnd.BusinessLogic
             return null;
         }
 
-        public static int CalculateUserAge(User user)
+        public static int CalculateUserAge(string userDOB)
         {
             var today = DateTime.Today;
-            DateTime birthdate = DateTime.Parse(user.DOB);
+            DateTime birthdate = DateTime.Parse(userDOB);
             var age = today.Year - birthdate.Year;
             if (birthdate > today.AddYears(-age)) age--;
             return age;
