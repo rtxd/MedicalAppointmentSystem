@@ -1,46 +1,48 @@
-﻿@model UTSMedicalSystem.FrontEnd.Models.Appointment
+﻿
+@model UTSMedicalSystem.FrontEnd.Models.Appointment
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h2>Edit</h2>
+<h2>Edit Existing Appointment</h2>
 
-<h4>Appointment</h4>
+@*<h4>Appointment</h4>*@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <div>
+            <h4>Existing Appointment Details</h4>
+            <label>Existing Date: @Model.Time.Date.ToString("dd/MM/yyyy")</label><br />
+            <label>Existing Time: @Model.Time.Date.ToString("hh:mm tt")</label>
+        </div>
+        <hr />
+        <form asp-action="Create">
+            <h4>New Appointment Details</h4>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ID" />
             <div class="form-group">
-                <label class="control-label">Notes</label>
-                <input asp-for="Notes" class="form-control" />
-                <span asp-validation-for="Notes" class="text-danger"></span>
+                <label>Please Select A Doctor</label>
+                <select asp-for="DoctorID" id="selectedDoctor" class="form-control" asp-items="ViewBag.DoctorID"></select>
             </div>
             <div class="form-group">
-                <label class="control-label">Location</label>
-                <input asp-for="Location" class="form-control" />
-                <span asp-validation-for="Location" class="text-danger"></span>
+
+                <label>Please Select A Date</label>
+                <div id="datepicker" data-provide="datepicker-inline"></div>
+                <input id="datepicker_input" class="hidden" placeholder="dd/mm/yyyy" />
+                <label>Old Date: @Model.Time.Date.ToString("dd/MM/yyyy")</label><br />
             </div>
+            <div>
+                <label>Please Select A Time</label>
+                <select class="form-control" id="timeSlots" asp-items="@{new SelectList(string.Empty, "Value", "Text")}"></select>
+            </div>
+            <input asp-for="Time" class="hidden" id="modelTime" />
+            <input asp-for="Location" class="hidden" value="UTS" />
+            <hr />
+
             <div class="form-group">
-                <label class="control-label">Time</label>
-                <input asp-for="Time" class="form-control" />
-                <span asp-validation-for="Time" class="text-danger"></span>
+                <input type="submit" value="Edit" class="btn btn-default" />
             </div>
-            <div class="form-group">
-                <label class="control-label">Doctor</label>
-                <input asp-for="DoctorID" class="form-control" />
-                <span asp-validation-for="DoctorID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label class="control-label">Patient</label>
-                <select asp-for="PatientID" class="form-control" asp-items="ViewBag.PatientID"></select>
-                <span asp-validation-for="PatientID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
+
         </form>
     </div>
 </div>
@@ -50,5 +52,63 @@
 </div>
 
 @section Scripts {
+    <script type="text/javascript">
+        $("#datepicker").datepicker({
+            format: "dd/mm/yyyy",
+            startDate: "0d",
+            maxViewMode: 1,
+            daysOfWeekDisabled: "0,6",
+            todayHighlight: true
+        })
+    </script>
+    <script>
+        var defItem = "<option value=0>Please Select A Date</option>";
+        $("#timeSlots").html(defItem);
+    </script>
+    <script>
+        $("#selectedDoctor").change(function () {
+            UpdateTimeSlots();
+        });
+    </script>
+    <script>
+        $("#timeSlots").change(function () {
+            var apptTime = $("#timeSlots option:selected").val();
+            var apptDate = $("#datepicker_input").val();
+            $("#modelTime").val(apptDate + " " + apptTime);
+        })
+    </script>
+    <script type="text/javascript">
+        $("#datepicker").on('changeDate', function () {
+            $("#datepicker_input").val($("#datepicker").datepicker('getFormattedDate'));
+            UpdateTimeSlots();
+        });
+    </script>
+    <script>
+        function UpdateTimeSlots() {
+            var selDate = $("#datepicker_input");
+            var selDoctor = $("#selectedDoctor option:selected").val();
+            console.log(selDoctor);
+            console.log($(selDoctor));
+            console.log($(selDoctor).val());
+            var data = "{date:" + JSON.stringify($(selDate).val()) + ", doctor:" + selDoctor + "}";
+            var url = "/Appointments/GetTimeSlots";
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: 'json',
+                contentType: 'application/json',
+                data: data,
+                success: function (result) {
+                    var items = "<option value=0>Please Select A Time</option>";
+                    $("#timeSlots").empty();
+                    $.each(result, function (i, slot) {
+                        items += "<option value='" + slot.value + "'>" + slot.text + "</option>";
+                    });
+                    $("#timeSlots").html(items);
+                }
+            });
+        }
+    </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
