@@ -108,14 +108,14 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
                 .Include(a => a.Patient)
                 .SingleOrDefaultAsync(m => m.ID == id);
 
-            ViewBag.Patientname = getName(appointment.PatientID);
-            ViewBag.Doctorname = getName(appointment.DoctorID);
-            ViewBag.AppointmentTime = appointment.Time.ToShortTimeString();
-
             if (appointment == null)
             {
                 return NotFound();
             }
+
+            ViewBag.Patientname = getName(appointment.PatientID);
+            ViewBag.Doctorname = getName(appointment.DoctorID);
+            ViewBag.AppointmentTime = appointment.Time.ToShortTimeString();
 
             return View(appointment);
         }
