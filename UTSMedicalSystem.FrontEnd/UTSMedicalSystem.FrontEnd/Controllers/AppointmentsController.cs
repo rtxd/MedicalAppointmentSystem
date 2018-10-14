@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         public static List<User> listOfUsers = new List<User>();
 
         // GET: Appointments
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             
@@ -77,6 +79,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         }
 
         //GET: Appointments/PatientDetails/5
+        [Authorize]
         public async Task<IActionResult> PatientDetails(int? id)
         {
             if (id == null)
@@ -96,6 +99,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         }
 
         // GET: Appointments/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -120,6 +124,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         }
 
         // GET: Appointments/Create
+        [Authorize]
         public IActionResult Create()
         {
             List<SelectListItem> dList = _context.Users.Where(d => d.Role == "Doctor").Select(d => new SelectListItem
@@ -302,6 +307,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         }
 
         // GET: Appointments/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -371,6 +377,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         }
 
         // GET: Appointments/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
