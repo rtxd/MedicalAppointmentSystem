@@ -62,38 +62,40 @@ else
                 //Check if the appointments patient ID is the same as the current logged in patient
                 @if (item.PatientID == ViewBag.thisUsersID || item.DoctorID == ViewBag.thisUsersID || ViewBag.role == "Receptionist")
                 {
-                    <tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Time)
+                </td>
+                @switch (ViewBag.role)
+                {
+                    case "Patient":
+                        <td>@getDoctorsName(item.DoctorID)</td>
+                        break;
+                    case "Doctor":
                         <td>
-                            @Html.DisplayFor(modelItem => item.Location)
+                            <a asp-action="PatientDetails" asp-route-id="@item.PatientID">@(item.Patient.FirstName + " " + item.Patient.LastName)</a>
                         </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Time)
-                        </td>
-                        @switch (ViewBag.role)
-                        {
-                            case "Patient":
-                                <td>@getDoctorsName(item.DoctorID)</td>
-                                break;
-                            case "Doctor":
-                                <td>
-                                    <a asp-action="PatientDetails" asp-route-id="@item.PatientID">@(item.Patient.FirstName + " " + item.Patient.LastName)</a>
-                                </td>
-                                break;
-                            case "Receptionist":
-                                <td><a asp-action="PatientDetails" asp-route-id="@item.PatientID">@(item.Patient.FirstName + " " + item.Patient.LastName)</a></td>
-                                break;
-                            case "Admin":
-                                <td><a asp-action="PatientDetails" asp-route-id="@item.PatientID">@(item.Patient.FirstName + " " + item.Patient.LastName)</a></td>
-                                break;
-                        }
+                        break;
+                    case "Receptionist":
+                        <td>@getDoctorsName(item.DoctorID)</td>
+                        <td><a asp-action="PatientDetails" asp-route-id="@item.PatientID">@(item.Patient.FirstName + " " + item.Patient.LastName)</a></td>
+                        break;
+                    case "Admin":
+                        <td>@getDoctorsName(item.DoctorID)</td>
+                        <td><a asp-action="PatientDetails" asp-route-id="@item.PatientID">@(item.Patient.FirstName + " " + item.Patient.LastName)</a></td>
+                        break;
+                }
 
 
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.ID">Cancel</a>
-                        </td>
-                    </tr>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Cancel</a>
+                </td>
+            </tr>
                 }
             }
         </tbody>
