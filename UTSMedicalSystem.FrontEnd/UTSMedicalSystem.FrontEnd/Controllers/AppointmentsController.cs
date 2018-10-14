@@ -13,7 +13,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
 {
     public class AppointmentsController : Controller
     {
-        private string getName(int id)
+        public string getName(int id)
         {
             foreach (User user in _context.Users)
             {
