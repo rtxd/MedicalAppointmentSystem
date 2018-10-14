@@ -9,13 +9,13 @@
 
 @*<h4>Appointment</h4>*@
 <hr />
-@if (!ViewData["Role"].Equals("None"))
+@if (!ViewBag.Role.Equals("None"))
 {
     <div class="row">
         <div class="col-md-4">
             <form asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                @if (ViewData["Role"].Equals("Receptionist"))
+                @if (ViewBag.Role.Equals("Receptionist"))
                 {
                     <div class="form-group">
                         <label>Please Select A Patient</label>
