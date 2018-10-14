@@ -228,7 +228,11 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
                 var pat = from u in _context.Users
                           where u.AspNetUserId == Common.GetUserAspNetId(User)
                           select u.ID;
-                appointment.PatientID = pat.First();
+                if (pat.Count() != 0)
+                {
+                    appointment.PatientID = pat.FirstOrDefault();
+                }
+                
             }
 
 

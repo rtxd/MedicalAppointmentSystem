@@ -9,13 +9,13 @@
 
 @*<h4>Appointment</h4>*@
 <hr />
-@if (!ViewBag.Role.Equals("None"))
-{
+@*@if (!ViewBag.Role.Equals("None"))
+{*@
     <div class="row">
         <div class="col-md-4">
             <form asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                @if (ViewBag.Role.Equals("Receptionist"))
+                @*@if (ViewBag.Equals("Receptionist"))
                 {
                     <div class="form-group">
                         <label>Please Select A Patient</label>
@@ -23,9 +23,9 @@
                     </div>
                 }
                 else
-                {
+                {*@
                     <input asp-for="PatientID" class="hidden" value="-1" />
-                }
+                @*}*@
                 <div class="form-group">
                     <label>Please Select A Doctor</label>
                     <select asp-for="DoctorID" id="selectedDoctor" class="form-control" asp-items="ViewBag.DoctorID"></select>
@@ -49,11 +49,11 @@
             </form>
         </div>
     </div>
-}
+@*@*}
 else
 {
     <h4>Please Log-In To Create An Appointment</h4>
-}
+}*@
 
 
 <div>
