@@ -1,5 +1,4 @@
-﻿
-@model UTSMedicalSystem.FrontEnd.Models.Appointment
+﻿@model UTSMedicalSystem.FrontEnd.Models.Appointment
 
 @{
     ViewData["Title"] = "Create";
@@ -11,48 +10,48 @@
 <hr />
 @if (!ViewBag.Role.Equals("None"))
 {
-    <div class="row">
-        <div class="col-md-4">
-            <form asp-action="Create">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                @if (ViewBag.Equals("Receptionist"))
-                {
-                    <div class="form-group">
-                        <label>Please Select A Patient</label>
-                        <select asp-for="PatientID" class="form-control" asp-items="ViewBag.PatientID"></select>
-                    </div>
-                }
-                else
-                {
-                    <input asp-for="PatientID" class="hidden" value="-1" />
-                }
-                <div class="form-group">
-                    <label>Please Select A Doctor</label>
-                    <select asp-for="DoctorID" id="selectedDoctor" class="form-control" asp-items="ViewBag.DoctorID"></select>
-                </div>
-                <div class="form-group">
-                    <label>Please Select A Date</label>
-                    <div id="datepicker" data-provide="datepicker-inline"></div>
-                    <input id="datepicker_input" class="hidden" placeholder="dd/mm/yyyy" />
-                </div>
-                <div>
-                    <label>Please Select A Time</label>
-                    <select class="form-control" id="timeSlots" asp-items="@{new SelectList(string.Empty, "Value", "Text")}"></select>
-                </div>
-                <input asp-for="Time" class="hidden" id="modelTime" />
-                <input asp-for="Location" class="hidden" value="UTS" />
-                <hr />
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-default" />
-                </div>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @if (ViewBag.Equals("Receptionist"))
+            {
+            <div class="form-group">
+                <label>Please Select A Patient</label>
+                <select asp-for="PatientID" class="form-control" asp-items="ViewBag.PatientID"></select>
+            </div>
+            }
+            else
+            {
+            <input asp-for="PatientID" class="hidden" value="-1" />
+            }
+            <div class="form-group">
+                <label>Please Select A Doctor</label>
+                <select asp-for="DoctorID" id="selectedDoctor" class="form-control" asp-items="ViewBag.DoctorID"></select>
+            </div>
+            <div class="form-group">
+                <label>Please Select A Date</label>
+                <div id="datepicker" data-provide="datepicker-inline"></div>
+                <input id="datepicker_input" class="form-control" placeholder="dd/mm/yyyy" />
+            </div>
+            <div>
+                <label>Please Select A Time</label>
+                <select class="form-control" id="timeSlots" asp-items="@{new SelectList(string.Empty, " Value", "Text" )}"></select>
+            </div>
+            <input asp-for="Time" class="form-control" id="modelTime" />
+            <input asp-for="Location" class="hidden" value="UTS" />
+            <hr />
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
 
-            </form>
-        </div>
+        </form>
     </div>
+</div>
 }
 else
 {
-    <h4>Please Log-In To Create An Appointment</h4>
+<h4>Please Log-In To Create An Appointment</h4>
 }
 
 
@@ -61,38 +60,35 @@ else
 </div>
 
 @section Scripts {
-    <script type="text/javascript">
+<script type="text/javascript">
         $("#datepicker").datepicker({
             format: "dd/mm/yyyy",
             startDate: "0d",
             maxViewMode: 1,
             daysOfWeekDisabled: "0,6",
-            
+
         })
-    </script>
-    <script>
+
         var defItem = "<option value=0>Please Select A Date</option>";
         $("#timeSlots").html(defItem);
-    </script>
-    <script>
-        $("#selectedDoctor").change(function () {
+
+        $("#selectedDoctor").on('change', function () {
             UpdateTimeSlots();
         });
-    </script>
-    <script>
-        $("#timeSlots").change(function () {
+
+        $("#timeSlots").on('change', function () {
             var apptTime = $("#timeSlots option:selected").val();
             var apptDate = $("#datepicker_input").val();
             $("#modelTime").val(apptDate + " " + apptTime);
+            console.log("TimeSlotUpdate")
         })
-    </script>
-    <script type="text/javascript">
+
         $("#datepicker").on('changeDate', function () {
             $("#datepicker_input").val($("#datepicker").datepicker('getFormattedDate'));
+            console.log("DatePicker ChangedDate");
             UpdateTimeSlots();
         });
-    </script>
-    <script>
+
         function UpdateTimeSlots() {
             var selDate = $("#datepicker_input");
             var selDoctor = $("#selectedDoctor option:selected").val();
@@ -117,7 +113,8 @@ else
                     $("#timeSlots").html(items);
                 }
             });
+            $("#modelTime").val("");
         }
-    </script>
+</script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
