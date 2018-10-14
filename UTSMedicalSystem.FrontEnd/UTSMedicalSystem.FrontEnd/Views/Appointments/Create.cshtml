@@ -32,14 +32,14 @@
             <div class="form-group">
                 <label>Please Select A Date</label>
                 <div id="datepicker" data-provide="datepicker-inline"></div>
-                <input id="datepicker_input" class="form-control" placeholder="dd/mm/yyyy" />
+                <input id="datepicker_input" class="hidden" placeholder="dd/mm/yyyy" />
             </div>
             <div>
                 <label>Please Select A Time</label>
                 <select class="form-control" id="timeSlots" asp-items="@{new SelectList(string.Empty, " Value", "Text" )}"></select>
             </div>
             
-            <input asp-for="Time" class="form-control" id="modelTime" />
+            <input asp-for="Time" class="hidden" id="modelTime" />
             <input asp-for="Location" class="hidden" value="UTS" />
             <hr />
             <div class="form-group">
@@ -62,60 +62,64 @@ else
 
 @section Scripts {
 <script type="text/javascript">
-        $("#datepicker").datepicker({
-            format: "mm/dd/yyyy",
-            startDate: "0d",
-            maxViewMode: 1,
-            daysOfWeekDisabled: "0,6",
+    $("#datepicker").datepicker({
+        format: "mm/dd/yyyy",
+        startDate: "0d",
+        maxViewMode: 1,
+        daysOfWeekDisabled: "0,6",
 
-        })
+    })
+</script>
+<script type="text/javascript">
+    var defItem = "<option value=0>Please Select A Date</option>";
+    $("#timeSlots").html(defItem);
 
-        var defItem = "<option value=0>Please Select A Date</option>";
-        $("#timeSlots").html(defItem);
+    $("#selectedDoctor").on('change', function () {
+        UpdateTimeSlots();
+    });
+</script>
+<script type="text/javascript">
+    $("#timeSlots").on('change', function () {
+        var apptTime = $("#timeSlots option:selected").val();
+        var apptDate = $("#datepicker_input").val();
+        $("#modelTime").val(apptDate + " " + apptTime);
+        console.log("TimeSlotUpdate")
+    })
+    </script>
+    <script type="text/javascript">
+    $("#datepicker").on('changeDate', function () {
+        $("#datepicker_input").val($("#datepicker").datepicker('getFormattedDate'));
+        console.log("DatePicker ChangedDate");
+        UpdateTimeSlots();
+    });
+</script>
+<script type="text/javascript">
+    function UpdateTimeSlots() {
+        var selDate = $("#datepicker_input");
+        var selDoctor = $("#selectedDoctor option:selected").val();
+        console.log(selDoctor);
+        console.log($(selDoctor));
+        console.log($(selDoctor).val());
+        var data = "{date:" + JSON.stringify($(selDate).val()) + ", doctor:" + selDoctor + "}";
+        var url = "/Appointments/GetTimeSlots";
 
-        $("#selectedDoctor").on('change', function () {
-            UpdateTimeSlots();
+        $.ajax({
+            type: 'POST',
+            url: url,
+            dataType: 'json',
+            contentType: 'application/json',
+            data: data,
+            success: function (result) {
+                var items = "<option value=0>Please Select A Time</option>";
+                $("#timeSlots").empty();
+                $.each(result, function (i, slot) {
+                    items += "<option value='" + slot.value + "'>" + slot.text + "</option>";
+                });
+                $("#timeSlots").html(items);
+            }
         });
-
-        $("#timeSlots").on('change', function () {
-            var apptTime = $("#timeSlots option:selected").val();
-            var apptDate = $("#datepicker_input").val();
-            $("#modelTime").val(apptDate + " " + apptTime);
-            console.log("TimeSlotUpdate")
-        })
-
-        $("#datepicker").on('changeDate', function () {
-            $("#datepicker_input").val($("#datepicker").datepicker('getFormattedDate'));
-            console.log("DatePicker ChangedDate");
-            UpdateTimeSlots();
-        });
-
-        function UpdateTimeSlots() {
-            var selDate = $("#datepicker_input");
-            var selDoctor = $("#selectedDoctor option:selected").val();
-            console.log(selDoctor);
-            console.log($(selDoctor));
-            console.log($(selDoctor).val());
-            var data = "{date:" + JSON.stringify($(selDate).val()) + ", doctor:" + selDoctor + "}";
-            var url = "/Appointments/GetTimeSlots";
-
-            $.ajax({
-                type: 'POST',
-                url: url,
-                dataType: 'json',
-                contentType: 'application/json',
-                data: data,
-                success: function (result) {
-                    var items = "<option value=0>Please Select A Time</option>";
-                    $("#timeSlots").empty();
-                    $.each(result, function (i, slot) {
-                        items += "<option value='" + slot.value + "'>" + slot.text + "</option>";
-                    });
-                    $("#timeSlots").html(items);
-                }
-            });
-            $("#modelTime").val("");
-        }
+        $("#modelTime").val("");
+    }
 </script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
