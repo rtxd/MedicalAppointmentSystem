@@ -38,6 +38,7 @@
                 <label>Please Select A Time</label>
                 <select class="form-control" id="timeSlots" asp-items="@{new SelectList(string.Empty, " Value", "Text" )}"></select>
             </div>
+            
             <input asp-for="Time" class="form-control" id="modelTime" />
             <input asp-for="Location" class="hidden" value="UTS" />
             <hr />
@@ -62,7 +63,7 @@ else
 @section Scripts {
 <script type="text/javascript">
         $("#datepicker").datepicker({
-            format: "dd/mm/yyyy",
+            format: "mm/dd/yyyy",
             startDate: "0d",
             maxViewMode: 1,
             daysOfWeekDisabled: "0,6",
