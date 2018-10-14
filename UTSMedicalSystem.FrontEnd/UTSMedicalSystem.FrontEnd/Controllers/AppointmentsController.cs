@@ -256,12 +256,42 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
 
             if (ModelState.IsValid)
             {
+                // All Appt Details Valid - Save and Redirect
                 _context.Add(appointment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PatientID"] = new SelectList(_context.Users, "ID", "ID", appointment.PatientID);
-            ViewData["Role"] = "None";
+            // Error - Reload Page
+
+            List<SelectListItem> dList = _context.Users.Where(d => d.Role == "Doctor").Select(d => new SelectListItem
+            {
+                Value = d.ID.ToString(),
+                Text = "Dr. " + d.FirstName.Substring(0, 1) + ". " + d.LastName
+            }).ToList();
+            List<SelectListItem> pList = _context.Users.Where(p => p.Role == "Patient").Select(p => new SelectListItem
+            {
+                Value = p.ID.ToString(),
+                Text = p.LastName + ", " + p.FirstName
+            }).ToList();
+
+            dList.Insert(0, (new SelectListItem { Text = "No Preference", Value = "-1" }));
+
+            ViewData["DoctorID"] = dList;
+            ViewData["PatientID"] = pList;
+
+            var curUserRole = from u in _context.Users
+                              where u.AspNetUserId == (Common.GetUserAspNetId(User))
+                              select u.Role.ToString();
+
+            if (!String.IsNullOrEmpty(curUserRole.FirstOrDefault()))
+            {
+                ViewData["Role"] = curUserRole.FirstOrDefault();
+            }
+            else
+            {
+                ViewData["Role"] = "None";
+            }
+
             return View(appointment);
         }
 
