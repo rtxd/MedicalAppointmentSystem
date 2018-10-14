@@ -7,7 +7,7 @@
 <h2>Your Appointments</h2>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-primary" asp-action="Create">Create New</a>
 </p>
 
 @functions {
@@ -30,12 +30,11 @@ public static string getDoctorsName(int ID)
 }
 else
 {
+    <h4>Upcoming Appointments</h4>
     <table class="table">
         <thead>
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Location)
-                </th>
+
                 <th>
                     @Html.DisplayNameFor(model => model.Time)
                 </th>
@@ -56,18 +55,19 @@ else
                         <th>Patient</th>
                         break;
                 }
+                <th>
+                    @Html.DisplayNameFor(model => model.Location)
+                </th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.Where(d => d.Time >= DateTime.Now).OrderBy(d => d.Time))
             {
                 //Check if the appointments patient ID is the same as the current logged in patient
                 @if (item.PatientID == ViewBag.thisUsersID || item.DoctorID == ViewBag.thisUsersID || ViewBag.role == "Receptionist")
                 {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Location)
-                </td>
+
                 <td>
                     @Html.DisplayFor(modelItem => item.Time)
                 </td>
@@ -90,7 +90,9 @@ else
                         <td><a asp-action="PatientDetails" asp-route-id="@item.PatientID">@(item.Patient.FirstName + " " + item.Patient.LastName)</a></td>
                         break;
                 }
-
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location)
+                </td>
 
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
@@ -102,5 +104,78 @@ else
             }
         </tbody>
     </table>
+    <h4>Past Appointments</h4>
+    <table class="table">
+        <thead>
+            <tr>
 
+                <th>
+                    @Html.DisplayNameFor(model => model.Time)
+                </th>
+                @switch (ViewBag.role)
+                {
+                    case "Patient":
+                        <th>Doctor</th>
+                        break;
+                    case "Doctor":
+                        <th>Patient</th>
+                        break;
+                    case "Receptionist":
+                        <th>Doctor</th>
+                        <th>Patient</th>
+                        break;
+                    case "Admin":
+                        <th>Doctor</th>
+                        <th>Patient</th>
+                        break;
+                }
+                <th>
+                    @Html.DisplayNameFor(model => model.Location)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Where(d => d.Time <= DateTime.Now).OrderBy(d => d.Time))
+            {
+                //Check if the appointments patient ID is the same as the current logged in patient
+                @if (item.PatientID == ViewBag.thisUsersID || item.DoctorID == ViewBag.thisUsersID || ViewBag.role == "Receptionist")
+                {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.Time)
+                </td>
+                @switch (ViewBag.role)
+                {
+                    case "Patient":
+                        <td>@getDoctorsName(item.DoctorID)</td>
+                        break;
+                    case "Doctor":
+                        <td>
+                            <a asp-action="PatientDetails" asp-route-id="@item.PatientID">@(item.Patient.FirstName + " " + item.Patient.LastName)</a>
+                        </td>
+                        break;
+                    case "Receptionist":
+                        <td>@getDoctorsName(item.DoctorID)</td>
+                        <td><a asp-action="PatientDetails" asp-route-id="@item.PatientID">@(item.Patient.FirstName + " " + item.Patient.LastName)</a></td>
+                        break;
+                    case "Admin":
+                        <td>@getDoctorsName(item.DoctorID)</td>
+                        <td><a asp-action="PatientDetails" asp-route-id="@item.PatientID">@(item.Patient.FirstName + " " + item.Patient.LastName)</a></td>
+                        break;
+                }
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location)
+                </td>
+
+                @*<td>
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Cancel</a>
+                </td>*@
+            </tr>
+                }
+            }
+        </tbody>
+    </table>
 }
