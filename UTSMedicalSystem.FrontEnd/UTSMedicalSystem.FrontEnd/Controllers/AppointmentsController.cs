@@ -132,9 +132,18 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
 
             var curUserRole = from u in _context.Users
                               where u.AspNetUserId == (Common.GetUserAspNetId(User))
-                              select u.Role;
+                              select u.Role.ToString();
 
-            ViewData["Role"] = curUserRole.First();
+
+
+            if (!String.IsNullOrEmpty(curUserRole.FirstOrDefault()))
+            {
+                ViewData["Role"] = curUserRole.FirstOrDefault();
+            } 
+            else
+            {
+                ViewData["Role"] = "None";
+            }
 
             return View();
         }

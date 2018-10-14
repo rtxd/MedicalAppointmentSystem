@@ -1,4 +1,4 @@
-﻿ 
+﻿
 @model UTSMedicalSystem.FrontEnd.Models.Appointment
 
 @{
@@ -9,43 +9,52 @@
 
 @*<h4>Appointment</h4>*@
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @if (!ViewData["Role"].Equals("Patient"))
-            {
+@if (!ViewData["Role"].Equals("None"))
+{
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                @if (ViewData["Role"].Equals("Receptionist"))
+                {
+                    <div class="form-group">
+                        <label>Please Select A Patient</label>
+                        <select asp-for="PatientID" class="form-control" asp-items="ViewBag.PatientID"></select>
+                    </div>
+                }
+                else
+                {
+                    <input asp-for="PatientID" class="hidden" value="-1" />
+                }
                 <div class="form-group">
-                    <label>Please Select A Patient</label>
-                    <select asp-for="PatientID" class="form-control" asp-items="ViewBag.PatientID"></select>
+                    <label>Please Select A Doctor</label>
+                    <select asp-for="DoctorID" id="selectedDoctor" class="form-control" asp-items="ViewBag.DoctorID"></select>
                 </div>
-            } else
-            {
-                <input asp-for="PatientID" class="hidden" value="-1"/>
-            }
-            <div class="form-group">
-                <label>Please Select A Doctor</label>
-                <select asp-for="DoctorID" id="selectedDoctor" class="form-control" asp-items="ViewBag.DoctorID"></select>
-            </div>
-            <div class="form-group">
-                <label>Please Select A Date</label>
-                <div id="datepicker" data-provide="datepicker-inline"></div>
-                <input id="datepicker_input" class="hidden" placeholder="dd/mm/yyyy" />
-            </div>
-            <div>
-                <label>Please Select A Time</label>
-                <select class="form-control" id="timeSlots" asp-items="@{new SelectList(string.Empty, "Value", "Text")}"></select>
-            </div>
-            <input asp-for="Time" class="hidden" id="modelTime" />
-            <input asp-for="Location" class="hidden" value="UTS" />
-            <hr />
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
+                <div class="form-group">
+                    <label>Please Select A Date</label>
+                    <div id="datepicker" data-provide="datepicker-inline"></div>
+                    <input id="datepicker_input" class="hidden" placeholder="dd/mm/yyyy" />
+                </div>
+                <div>
+                    <label>Please Select A Time</label>
+                    <select class="form-control" id="timeSlots" asp-items="@{new SelectList(string.Empty, "Value", "Text")}"></select>
+                </div>
+                <input asp-for="Time" class="hidden" id="modelTime" />
+                <input asp-for="Location" class="hidden" value="UTS" />
+                <hr />
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
 
-        </form>
+            </form>
+        </div>
     </div>
-</div>
+}
+else
+{
+    <h4>Please Log-In To Create An Appointment</h4>
+}
+
 
 <div>
     <a asp-action="Index">Back to List</a>
@@ -82,7 +91,7 @@
             $("#datepicker_input").val($("#datepicker").datepicker('getFormattedDate'));
             UpdateTimeSlots();
         });
-        </script>
+    </script>
     <script>
         function UpdateTimeSlots() {
             var selDate = $("#datepicker_input");
@@ -92,7 +101,7 @@
             console.log($(selDoctor).val());
             var data = "{date:" + JSON.stringify($(selDate).val()) + ", doctor:" + selDoctor + "}";
             var url = "/Appointments/GetTimeSlots";
-            
+
             $.ajax({
                 type: 'POST',
                 url: url,
