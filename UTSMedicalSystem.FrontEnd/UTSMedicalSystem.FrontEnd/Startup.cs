@@ -12,6 +12,7 @@ using UTSMedicalSystem.FrontEnd.Data;
 using UTSMedicalSystem.FrontEnd.Models;
 using UTSMedicalSystem.FrontEnd.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Globalization;
 
 namespace UTSMedicalSystem.FrontEnd
 {
@@ -47,14 +48,18 @@ namespace UTSMedicalSystem.FrontEnd
         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddMvc();
+            services.AddMvc().AddViewLocalization();
+            CultureInfo.CurrentCulture = new CultureInfo("en-AU");
 
-            
+
+
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
                     options.LoginPath = "/account/login";
                     options.AccessDeniedPath = "/account/accessdenied";
                 });
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
