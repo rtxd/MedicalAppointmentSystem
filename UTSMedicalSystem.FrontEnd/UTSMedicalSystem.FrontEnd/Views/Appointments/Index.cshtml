@@ -182,6 +182,9 @@ else
                 <td>
                     @Html.DisplayFor(modelItem => item.Location)
                 </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a>
+                </td>
             </tr>
                 }
             }
