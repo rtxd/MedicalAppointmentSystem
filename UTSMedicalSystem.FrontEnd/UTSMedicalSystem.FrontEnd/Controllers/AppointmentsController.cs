@@ -143,18 +143,24 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
             ViewData["DoctorID"] = dList;
             ViewData["PatientID"] = pList;
 
-            var userId = Common.GetUserAspNetId(User);
-
+            
             var curUserRole = from u in _context.Users
-                              where u.AspNetUserId == userId
-                              select u.Role;
+                            where u.AspNetUserId == Common.GetUserAspNetId(User)
+                            select u.Role;
 
-
-            foreach(string role in curUserRole.ToList())
+            if (!String.IsNullOrEmpty(curUserRole.FirstOrDefault()))
             {
-                if (role == null) ViewData["Role"] = "None";
-                else ViewData["Role"] = role.ToString();
+                ViewData["Role"] = curUserRole.FirstOrDefault();
+            } else
+            {
+                ViewData["Role"] = "None";
             }
+
+            //foreach(string role in curUserRole.ToList())
+            //{
+            //    if (role == null) ViewData["Role"] = "None";
+            //    else ViewData["Role"] = role.ToString();
+            //}
 
             return View();
         }
@@ -205,14 +211,24 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
             List<string> timeSlots = new List<string> {"09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM",
                                                         "01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM"};
 
-
+            //Removed Booked Slots
             foreach (var slot in BookedSlots)
             {
                 timeSlots.Remove(slot);
             }
 
+            //foreach (var slot in timeSlots)
+            //{
+            //    int tmp = int.Parse(slot.ToString().Substring(0, 2));
+            //    if (DateTime.Now.Hour < tmp)
+            //    {
+            //        timeSlots.Remove(tim);
+            //    }
+            //}
+
+
             List<SelectListItem> slotsList = timeSlots.ConvertAll(a =>
-            {
+            {              
                 return new SelectListItem()
                 {
                     Text = a.ToString(),
