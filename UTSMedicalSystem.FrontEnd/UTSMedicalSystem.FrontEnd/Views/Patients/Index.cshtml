@@ -14,21 +14,30 @@
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    First Name
-                </th>
-                <th>
-                    Last Name
-                </th>
-                <th>
-                    DOB
-                </th>
-                <th>
-                    UTS ID
-                </th>
+            <th>
+                First Name
+            </th>
+            <th>
+                Last Name
+            </th>
+            <th>
+                DOB
+            </th>
+            <th>
+                UTS ID
+            </th>
+            @if (ViewBag.role != "Patient")
+            {
                 <th>
                     History
                 </th>
+            }
+            @if (ViewBag.role == "Admin" || ViewBag.role == "Receptionist")
+            {
+                <th>
+                    Role
+                </th>
+            }
             <th></th>
         </tr>
     </thead>
@@ -37,31 +46,40 @@
         {
             @if (item.AspNetUserId == ViewBag.thisUsersID || ViewBag.role == "Receptionist" || ViewBag.role == "Admin")
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.FirstName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.LastName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DOB)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UTSID)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.History)
-                    </td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                        @if (ViewBag.role == "Admin")
-                        { 
-                            <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-                        }
-                    </td>
-                </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DOB)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UTSID)
+            </td>
+            @if (ViewBag.role != "Patient")
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.History)
+                </td>
+            }
+            @if (ViewBag.role == "Admin" || ViewBag.role == "Receptionist")
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.Role)
+                </td>
+            }
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                @if (ViewBag.role == "Admin")
+                {
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                }
+            </td>
+        </tr>
             }
 
         }
