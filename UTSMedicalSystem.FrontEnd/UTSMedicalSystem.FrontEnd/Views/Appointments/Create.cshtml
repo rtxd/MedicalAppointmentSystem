@@ -39,7 +39,7 @@
                 <select class="form-control" id="timeSlots" asp-items="@{new SelectList(string.Empty, " Value", "Text" )}"></select>
             </div>
             
-            <input asp-for="Time" class="hidden" type="text" id="modelTime" />
+            <input asp-for="Time" class="form-control" type="text" id="modelTime" />
             <input asp-for="Location" class="hidden" value="UTS" />
             <hr />
             <div class="form-group">
