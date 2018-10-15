@@ -9,6 +9,7 @@
 <p>
     <a class="btn btn-primary" asp-action="Create">Create New</a>
 </p>
+<br />
 
 @functions {
 public static string getDoctorsName(int ID)
@@ -67,7 +68,7 @@ else
             @foreach (var item in Model.Where(d => d.Time >= DateTime.Now).OrderBy(d => d.Time))
             {
                 //Check if the appointments patient ID is the same as the current logged in patient
-                @if (item.PatientID == ViewBag.thisUsersID || item.DoctorID == ViewBag.thisUsersID || ViewBag.role == "Receptionist")
+                @if (item.PatientID == ViewBag.thisUsersID || item.DoctorID == ViewBag.thisUsersID || ViewBag.role == "Receptionist" || ViewBag.role == "Admin")
                 {
             <tr>
 
@@ -110,6 +111,8 @@ else
             }
         </tbody>
     </table>
+    <Br />
+    <Br />
     <h4>Past Appointments</h4>
     <table class="table">
         <thead>
@@ -179,12 +182,6 @@ else
                 <td>
                     @Html.DisplayFor(modelItem => item.Location)
                 </td>
-
-                @*<td>
-                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ID">Cancel</a>
-                </td>*@
             </tr>
                 }
             }

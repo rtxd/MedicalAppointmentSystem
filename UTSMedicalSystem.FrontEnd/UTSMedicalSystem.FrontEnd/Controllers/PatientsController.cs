@@ -55,6 +55,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         // GET: Patients/Create
         public IActionResult Create()
         {
+            ViewBag.role = Common.GetUserRole(_context, User);
             return View();
         }
 
@@ -88,6 +89,9 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
             {
                 return NotFound();
             }
+
+            ViewBag.role = Common.GetUserRole(_context, User);
+
             return View(user);
         }
 

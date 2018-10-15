@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -38,6 +39,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         public static List<User> listOfUsers = new List<User>();
 
         // GET: Appointments
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             
@@ -56,9 +58,8 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
                 if (Common.GetUserAspNetId(User) == user.AspNetUserId)
                 {
                     foreach (Appointment appointment in _context.Appointments)
-                        if (user.ID == appointment.PatientID || user.ID == appointment.DoctorID || user.Role == "Receptionist")
+                        if (user.ID == appointment.PatientID || user.ID == appointment.DoctorID || user.Role == "Receptionist" || user.Role == "Admin")
                         {
-
                             //Set variables for view here
                             ViewBag.role = user.Role;
                             ViewBag.thisUsersID = user.ID;
@@ -78,6 +79,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         }
 
         //GET: Appointments/PatientDetails/5
+        [Authorize]
         public async Task<IActionResult> PatientDetails(int? id)
         {
             if (id == null)
@@ -97,6 +99,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         }
 
         // GET: Appointments/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -121,6 +124,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         }
 
         // GET: Appointments/Create
+        [Authorize]
         public IActionResult Create()
         {
             List<SelectListItem> dList = _context.Users.Where(d => d.Role == "Doctor").Select(d => new SelectListItem
@@ -139,6 +143,10 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
             ViewData["DoctorID"] = dList;
             ViewData["PatientID"] = pList;
 
+            var userId = Common.GetUserAspNetId(User);
+
+
+
             var curUserRole = from u in _context.Users
                               where u.AspNetUserId == (Common.GetUserAspNetId(User))
                               select u.Role.ToString();
@@ -148,11 +156,17 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
             if (!String.IsNullOrEmpty(curUserRole.FirstOrDefault()))
             {
                 ViewData["Role"] = curUserRole.FirstOrDefault();
-            } 
+            }
             else
             {
                 ViewData["Role"] = "None";
             }
+
+            //foreach(string role in curUserRole.ToList())
+            //{
+            //    if (role == null) ViewData["Role"] = "None";
+            //    else ViewData["Role"] = role.ToString();
+            //}
 
             return View();
         }
@@ -203,14 +217,24 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
             List<string> timeSlots = new List<string> {"09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "12:00 PM", "12:30 PM",
                                                         "01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM", "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM"};
 
-
+            //Removed Booked Slots
             foreach (var slot in BookedSlots)
             {
                 timeSlots.Remove(slot);
             }
 
+            //foreach (var slot in timeSlots)
+            //{
+            //    int tmp = int.Parse(slot.ToString().Substring(0, 2));
+            //    if (DateTime.Now.Hour < tmp)
+            //    {
+            //        timeSlots.Remove(tim);
+            //    }
+            //}
+
+
             List<SelectListItem> slotsList = timeSlots.ConvertAll(a =>
-            {
+            {              
                 return new SelectListItem()
                 {
                     Text = a.ToString(),
@@ -305,6 +329,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         }
 
         // GET: Appointments/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -374,6 +399,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         }
 
         // GET: Appointments/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
