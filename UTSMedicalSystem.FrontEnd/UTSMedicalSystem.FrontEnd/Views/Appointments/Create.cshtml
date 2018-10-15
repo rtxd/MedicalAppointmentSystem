@@ -39,7 +39,7 @@
                 <select class="form-control" id="timeSlots" asp-items="@{new SelectList(string.Empty, " Value", "Text" )}"></select>
             </div>
             
-            <input asp-for="Time" class="hidden" id="modelTime" />
+            <input asp-for="Time" class="hidden" type="text" id="modelTime" />
             <input asp-for="Location" class="hidden" value="UTS" />
             <hr />
             <div class="form-group">
@@ -63,7 +63,7 @@ else
 @section Scripts {
 <script type="text/javascript">
     $("#datepicker").datepicker({
-        format: "mm/dd/yyyy",
+        format: "dd/mm/yyyy",
         startDate: "0d",
         maxViewMode: 1,
         daysOfWeekDisabled: "0,6",

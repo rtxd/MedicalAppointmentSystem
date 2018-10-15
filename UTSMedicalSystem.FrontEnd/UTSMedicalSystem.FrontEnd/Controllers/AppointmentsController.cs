@@ -111,15 +111,17 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
                 .Include(a => a.Patient)
                 .SingleOrDefaultAsync(m => m.ID == id);
 
-            ViewBag.Patientname = getName(appointment.PatientID);
-            ViewBag.Doctorname = getName(appointment.DoctorID);
-            ViewBag.AppointmentTime = appointment.Time.ToShortTimeString();
-
             if (appointment == null)
             {
                 return NotFound();
             }
 
+        
+            ViewBag.Patientname = getName(appointment.PatientID);
+            ViewBag.Doctorname = getName(appointment.DoctorID);
+            ViewBag.AppointmentTime = appointment.Time.ToShortTimeString();
+
+          
             return View(appointment);
         }
 
@@ -181,7 +183,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
 
             if (String.IsNullOrEmpty(selDate))
             {
-                selDate = DateTime.Today.ToString("MM/dd/yyyy");
+                selDate = DateTime.Today.ToString("dd/MM/yyyy");
             }
 
 
@@ -192,14 +194,14 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
             {
                 // Doctor Selected
                 BookedSlots = (from a in _context.Appointments
-                                  where a.Time.Date.ToString("MM/dd/yyyy") == selDate && a.DoctorID == selDoctor
+                                  where a.Time.Date.ToString("dd/MM/yyyy") == selDate && a.DoctorID == selDoctor
                                   select a.Time.ToString("hh:mm tt")).ToList();
             } else {
                 //No Doctor Selected
                 var doctorCount = _context.Users.Count(n => n.Role == "Doctor");
 
                 var AllBookedSlots = (from a in _context.Appointments
-                                      where a.Time.Date.ToString("MM/dd/yyyy") == selDate
+                                      where a.Time.Date.ToString("dd/MM/yyyy") == selDate
                                       select a.Time.ToString("hh:mm tt")).ToList();
 
                 var dict = AllBookedSlots.GroupBy(s => s).ToDictionary(g => g.Key, g => g.Count());
@@ -369,10 +371,29 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Notes,Location,Time,DoctorID,PatientID")] Appointment appointment)
         {
+            //Handle No Doctor Preference
+            if (appointment.DoctorID == -1)
+            {
+                var busyDoctors = from s in _context.Appointments
+                                  where s.Time == appointment.Time
+                                  select s.DoctorID;
+
+                var freeDoctors = from d in _context.Users
+                                  where d.Role == "Doctor" && busyDoctors.All(b => b != d.ID)
+                                  select d.ID;
+
+                if (freeDoctors.Count() != 0)
+                {
+                    appointment.DoctorID = freeDoctors.First();
+                }
+
+            }
+
             if (id != appointment.ID)
             {
                 return NotFound();
             }
+            //appointment.ID = id;
 
             if (ModelState.IsValid)
             {

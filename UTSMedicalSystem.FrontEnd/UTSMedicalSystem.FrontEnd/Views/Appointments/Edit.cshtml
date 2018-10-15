@@ -13,11 +13,14 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <h4>Edit Appointment Details</h4>
+
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ID" />
+            <input type="hidden" asp-for="PatientID" />
             <div class="form-group">
                 <label>Please Select A Doctor</label>
                 <select asp-for="DoctorID" id="selectedDoctor" class="form-control" asp-items="ViewBag.DoctorID"></select>
-                
+
             </div>
             <div class="form-group">
 
@@ -31,7 +34,7 @@
                 <select class="form-control" id="timeSlots" asp-items="@{new SelectList(string.Empty, "Value", "Text")}"></select>
                 <label>Existing Time: @Model.Time.ToShortTimeString()</label>
             </div>
-            <input asp-for="Time" class="hidden" id="modelTime" />
+            <input asp-for="Time" class="hidden" type="text" id="modelTime" />
             <input asp-for="Location" class="hidden" value="UTS" />
             <hr />
 
@@ -50,7 +53,7 @@
 @section Scripts {
     <script type="text/javascript">
         $("#datepicker").datepicker({
-            format: "mm/dd/yyyy",
+            format: "dd/mm/yyyy",
             startDate: "0d",
             maxViewMode: 1,
             daysOfWeekDisabled: "0,6",
