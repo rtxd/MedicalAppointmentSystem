@@ -32,12 +32,28 @@
                 <input asp-for="UTSID" class="form-control" />
                 <span asp-validation-for="UTSID" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="hidden" asp-for="History" class="form-control" />
-            </div>
-            <div class="form-group">
-                <input type="hidden" value="Patient" asp-for="Role" class="form-control" />
-            </div>
+            @if (ViewBag.role == "Doctor" || ViewBag.role == "Admin" || ViewBag.role == "Receptionist")
+            {
+                <div class="form-group">
+                    <label class="control-label">History</label>
+                    <input asp-for="History" class="form-control" />
+                    <span asp-validation-for="History" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Role</label>
+                    <input asp-for="Role" class="form-control" />
+                    <span asp-validation-for="Role" class="text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <input type="hidden" asp-for="History" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <input type="hidden" asp-for="Role" class="form-control" />
+                </div>
+            }
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

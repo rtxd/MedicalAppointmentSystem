@@ -143,15 +143,21 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
             ViewData["DoctorID"] = dList;
             ViewData["PatientID"] = pList;
 
-            
+            var userId = Common.GetUserAspNetId(User);
+
+
+
             var curUserRole = from u in _context.Users
-                            where u.AspNetUserId == Common.GetUserAspNetId(User)
-                            select u.Role;
+                              where u.AspNetUserId == (Common.GetUserAspNetId(User))
+                              select u.Role.ToString();
+
+
 
             if (!String.IsNullOrEmpty(curUserRole.FirstOrDefault()))
             {
                 ViewData["Role"] = curUserRole.FirstOrDefault();
-            } else
+            }
+            else
             {
                 ViewData["Role"] = "None";
             }
