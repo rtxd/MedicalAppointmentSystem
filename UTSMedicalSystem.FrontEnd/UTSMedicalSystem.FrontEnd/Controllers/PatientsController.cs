@@ -88,6 +88,9 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
             {
                 return NotFound();
             }
+
+            ViewBag.role = Common.GetUserRole(_context, User);
+
             return View(user);
         }
 
