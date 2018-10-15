@@ -181,7 +181,7 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
 
             if (String.IsNullOrEmpty(selDate))
             {
-                selDate = DateTime.Today.ToString("MM/dd/yyyy");
+                selDate = DateTime.Today.ToString("dd/MM/yyyy");
             }
 
 
@@ -192,14 +192,14 @@ namespace UTSMedicalSystem.FrontEnd.Controllers
             {
                 // Doctor Selected
                 BookedSlots = (from a in _context.Appointments
-                                  where a.Time.Date.ToString("MM/dd/yyyy") == selDate && a.DoctorID == selDoctor
+                                  where a.Time.Date.ToString("dd/MM/yyyy") == selDate && a.DoctorID == selDoctor
                                   select a.Time.ToString("hh:mm tt")).ToList();
             } else {
                 //No Doctor Selected
                 var doctorCount = _context.Users.Count(n => n.Role == "Doctor");
 
                 var AllBookedSlots = (from a in _context.Appointments
-                                      where a.Time.Date.ToString("MM/dd/yyyy") == selDate
+                                      where a.Time.Date.ToString("dd/MM/yyyy") == selDate
                                       select a.Time.ToString("hh:mm tt")).ToList();
 
                 var dict = AllBookedSlots.GroupBy(s => s).ToDictionary(g => g.Key, g => g.Count());
